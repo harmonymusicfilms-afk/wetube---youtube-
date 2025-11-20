@@ -1,0 +1,7 @@
+{
+  "name": "Wetube",
+  "description": "A next-generation video sharing platform featuring AI-powered creator tools for thumbnail generation and image editing, plus an intelligent assistant.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
