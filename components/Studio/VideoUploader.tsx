@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useCallback } from 'react';
-import { CloudUpload, FileVideo, X, CheckCircle, Loader2, AlertCircle, ChevronDown, Lock, Globe, EyeOff, ImageIcon, DollarSign, FileCheck, Calendar } from '../Icons';
+import { CloudUpload, FileVideo, X, CheckCircle, Loader2, AlertCircle, ChevronDown, Lock, Globe, EyeOff, ImageIcon, DollarSign, FileCheck, Calendar, Wand2 } from '../Icons';
 import { Video } from '../../types';
 import Button from '../Button';
 import Input from '../Input';
@@ -8,6 +8,7 @@ import { useToast } from '../../contexts/ToastContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { CATEGORIES } from '../../constants';
 import { uploadVideo } from '../../services/videoService';
+import { generateThumbnail } from '../../services/gemini';
 
 interface VideoUploaderProps {
   onVideoPublished: (video: Video) => void;
@@ -23,6 +24,7 @@ const VideoUploader: React.FC<VideoUploaderProps> = ({ onVideoPublished }) => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [isGeneratingThumb, setIsGeneratingThumb] = useState(false);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const thumbInputRef = useRef<HTMLInputElement>(null);
@@ -115,6 +117,28 @@ const VideoUploader: React.FC<VideoUploaderProps> = ({ onVideoPublished }) => {
      }
   };
 
+  const handleAiThumbnail = async () => {
+    if (isUploading || isCompleted) return;
+    if (!title) {
+        showError("Enter a video title first to generate a thumbnail.");
+        return;
+    }
+    
+    setIsGeneratingThumb(true);
+    try {
+        const prompt = `Youtube video thumbnail for: ${title}. ${description ? description.substring(0, 50) : ''}. High quality, catchy, 4k.`;
+        const url = await generateThumbnail(prompt);
+        setGeneratedThumbnails(prev => [url, ...prev]);
+        setSelectedThumbnail(url);
+        success("AI Thumbnail generated!");
+    } catch (err) {
+        console.error(err);
+        showError("Failed to generate thumbnail.");
+    } finally {
+        setIsGeneratingThumb(false);
+    }
+  };
+
   const handleRemoveFile = () => {
     setFile(null);
     setUploadProgress(0);
@@ -198,8 +222,6 @@ const VideoUploader: React.FC<VideoUploaderProps> = ({ onVideoPublished }) => {
         success("Video published successfully!");
         onVideoPublished(finalVideo);
         
-        // Reset form after short delay or keep it? 
-        // For now, let's keep it in "Complete" state so user sees it.
     } catch (err) {
         console.error(err);
         showError("Failed to upload video. Please try again.");
@@ -332,13 +354,19 @@ const VideoUploader: React.FC<VideoUploaderProps> = ({ onVideoPublished }) => {
              </div>
 
              <div className="space-y-6">
-               <Input 
-                 label="Title (required)"
-                 placeholder="Add a title that describes your video"
-                 value={title}
-                 onChange={(e) => setTitle(e.target.value)}
-                 disabled={isUploading || isCompleted}
-               />
+               <div>
+                 <Input 
+                   label="Title (required)"
+                   placeholder="Add a title that describes your video"
+                   value={title}
+                   onChange={(e) => setTitle(e.target.value)}
+                   disabled={isUploading || isCompleted}
+                   maxLength={100}
+                 />
+                 <div className="text-right text-xs text-gray-500 mt-1">
+                   {title.length}/100
+                 </div>
+               </div>
 
                <div className="space-y-2">
                  <label className="block text-sm font-medium text-gray-300">Description</label>
@@ -354,7 +382,7 @@ const VideoUploader: React.FC<VideoUploaderProps> = ({ onVideoPublished }) => {
                {/* Thumbnail Selection */}
                <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-300">Thumbnail</label>
-                  <p className="text-xs text-gray-500 mb-2">Select or upload a picture that shows what's in your video.</p>
+                  <p className="text-xs text-gray-500 mb-2">Select an auto-generated option, use AI, or upload your own.</p>
                   <div className="flex gap-4 overflow-x-auto pb-2 custom-scrollbar">
                      <div 
                         onClick={() => !isUploading && !isCompleted && thumbInputRef.current?.click()}
@@ -363,6 +391,15 @@ const VideoUploader: React.FC<VideoUploaderProps> = ({ onVideoPublished }) => {
                         <ImageIcon className="w-6 h-6 mb-1" />
                         <span className="text-xs">Upload file</span>
                         <input ref={thumbInputRef} type="file" className="hidden" accept="image/*" onChange={handleThumbSelect} />
+                     </div>
+
+                     {/* AI Generate Button */}
+                     <div 
+                        onClick={handleAiThumbnail}
+                        className={`w-40 h-24 shrink-0 border-2 border-dashed border-[#3F3F3F] rounded-lg flex flex-col items-center justify-center transition-colors text-wetube-red bg-wetube-red/5 hover:bg-wetube-red/10 ${isUploading || isCompleted || isGeneratingThumb ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:border-wetube-red'}`}
+                     >
+                        {isGeneratingThumb ? <Loader2 className="w-6 h-6 mb-1 animate-spin" /> : <Wand2 className="w-6 h-6 mb-1" />}
+                        <span className="text-xs font-medium">AI Generate</span>
                      </div>
                      
                      {customThumbnail && (

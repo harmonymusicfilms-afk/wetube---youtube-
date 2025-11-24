@@ -44,7 +44,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onClick }) => {
           className="w-9 h-9 rounded-full mt-1" 
         />
         <div className="flex flex-col flex-1">
-          <h3 className="text-white font-semibold text-base line-clamp-2 leading-tight group-hover:text-gray-200 transition-colors">{video.title}</h3>
+          <h3 className="text-white font-medium text-base line-clamp-2 leading-tight group-hover:text-gray-200 transition-colors font-roboto">{video.title}</h3>
           <div className="text-[#AAA] text-sm mt-1 hover:text-white">{video.channelName}</div>
           <div className="text-[#AAA] text-sm">
             {video.views} • {video.postedAt}
@@ -55,9 +55,11 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onClick }) => {
           </div>
           
           <div className="flex flex-wrap items-center gap-2 mt-2">
-            <span className="bg-[#2a2a2a] text-gray-300 text-[10px] px-2 py-0.5 rounded border border-[#3F3F3F] font-medium">
-               {video.category}
-            </span>
+            {video.category && (
+              <span className="bg-[#222] text-gray-400 text-[10px] px-2 py-0.5 rounded border border-[#333] font-medium hover:bg-[#333] hover:text-white transition-colors">
+                {video.category}
+              </span>
+            )}
 
             <div className="flex items-center gap-1 text-[#777] text-[10px]" title={`Visibility: ${video.visibility}`}>
                <VisibilityIcon className="w-3 h-3" />

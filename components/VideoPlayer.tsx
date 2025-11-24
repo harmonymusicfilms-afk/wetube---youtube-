@@ -11,6 +11,50 @@ interface VideoPlayerProps {
   video: Video;
 }
 
+const CommentItem: React.FC<{ comment: Comment, isReply?: boolean }> = ({ comment, isReply = false }) => {
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(comment.likes);
+
+  const toggleLike = () => {
+     setIsLiked(!isLiked);
+     setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
+  };
+
+  return (
+    <div className={`flex gap-3 ${isReply ? 'mt-3 ml-10' : 'mt-4'}`}>
+       <img src={comment.avatar} className="w-8 h-8 rounded-full shrink-0" alt={comment.author} />
+       <div className="flex flex-col gap-1 flex-1">
+          <div className="flex items-baseline gap-2">
+             <span className="text-white text-sm font-semibold">{comment.author}</span>
+             <span className="text-gray-400 text-xs">{comment.timestamp}</span>
+          </div>
+          <p className="text-white text-sm leading-relaxed">{comment.text}</p>
+          <div className="flex items-center gap-4 mt-1">
+             <button 
+               onClick={toggleLike}
+               className={`flex items-center gap-2 text-xs ${isLiked ? 'text-white' : 'text-gray-400 hover:text-white'}`}
+             >
+                <ThumbsUp className={`w-4 h-4 ${isLiked ? 'fill-white' : ''}`} />
+                <span>{likeCount}</span>
+             </button>
+             <button className="flex items-center gap-2 text-xs text-gray-400 hover:text-white">
+                <div className="rotate-180"><ThumbsUp className="w-4 h-4" /></div>
+             </button>
+             <button className="text-xs font-bold text-gray-400 hover:text-white">Reply</button>
+          </div>
+
+          {/* Recursive Replies */}
+          {comment.replies && comment.replies.map(reply => (
+             <CommentItem key={reply.id} comment={reply} isReply={true} />
+          ))}
+       </div>
+       <button className="p-1 hover:bg-[#303030] rounded-full h-fit text-gray-400 opacity-0 group-hover:opacity-100">
+          <MoreVertical className="w-4 h-4" />
+       </button>
+    </div>
+  );
+};
+
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
   const recommended = MOCK_VIDEOS.filter(v => v.id !== video.id);
   const [comments, setComments] = useState<Comment[]>(MOCK_COMMENTS);
@@ -57,50 +101,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
     
     setComments([comment, ...comments]);
     setNewComment('');
-  };
-
-  const CommentItem = ({ comment, isReply = false }: { comment: Comment, isReply?: boolean }) => {
-    const [isLiked, setIsLiked] = useState(false);
-    const [likeCount, setLikeCount] = useState(comment.likes);
-
-    const toggleLike = () => {
-       setIsLiked(!isLiked);
-       setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
-    };
-
-    return (
-      <div className={`flex gap-3 ${isReply ? 'mt-3 ml-10' : 'mt-4'}`}>
-         <img src={comment.avatar} className="w-8 h-8 rounded-full shrink-0" alt={comment.author} />
-         <div className="flex flex-col gap-1 flex-1">
-            <div className="flex items-baseline gap-2">
-               <span className="text-white text-sm font-semibold">{comment.author}</span>
-               <span className="text-gray-400 text-xs">{comment.timestamp}</span>
-            </div>
-            <p className="text-white text-sm leading-relaxed">{comment.text}</p>
-            <div className="flex items-center gap-4 mt-1">
-               <button 
-                 onClick={toggleLike}
-                 className={`flex items-center gap-2 text-xs ${isLiked ? 'text-white' : 'text-gray-400 hover:text-white'}`}
-               >
-                  <ThumbsUp className={`w-4 h-4 ${isLiked ? 'fill-white' : ''}`} />
-                  <span>{likeCount}</span>
-               </button>
-               <button className="flex items-center gap-2 text-xs text-gray-400 hover:text-white">
-                  <div className="rotate-180"><ThumbsUp className="w-4 h-4" /></div>
-               </button>
-               <button className="text-xs font-bold text-gray-400 hover:text-white">Reply</button>
-            </div>
-
-            {/* Recursive Replies */}
-            {comment.replies && comment.replies.map(reply => (
-               <CommentItem key={reply.id} comment={reply} isReply={true} />
-            ))}
-         </div>
-         <button className="p-1 hover:bg-[#303030] rounded-full h-fit text-gray-400 opacity-0 group-hover:opacity-100">
-            <MoreVertical className="w-4 h-4" />
-         </button>
-      </div>
-    );
   };
 
   return (
