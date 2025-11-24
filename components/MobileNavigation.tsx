@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { Home, Compass, PlusCircle, PlaySquare, User } from './Icons';
+import { Home, PlusCircle, PlaySquare, User, Smartphone } from './Icons';
 import { View } from '../types';
 
 interface MobileNavigationProps {
@@ -37,10 +38,10 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ currentView, onChan
         onClick={() => onChangeView(View.HOME)}
       />
       <NavItem 
-        icon={Compass} 
+        icon={Smartphone} 
         label="Shorts" 
-        isActive={false}
-        onClick={() => {}}
+        isActive={currentView === View.SHORTS}
+        onClick={() => onChangeView(View.SHORTS)}
       />
       <div className="flex items-center justify-center -mt-6">
         <button 

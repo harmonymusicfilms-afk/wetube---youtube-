@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Wetube</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,9 +30,15 @@
       }
     </script>
     <style>
+      /* Native Smooth Scrolling */
+      html {
+        scroll-behavior: smooth;
+      }
+
       /* Custom Scrollbar for dark theme aesthetics */
       ::-webkit-scrollbar {
         width: 8px;
+        height: 8px;
       }
       ::-webkit-scrollbar-track {
         background: #0f0f0f; 
@@ -44,8 +50,28 @@
       ::-webkit-scrollbar-thumb:hover {
         background: #555; 
       }
+
       body {
         font-family: 'Inter', sans-serif;
+        /* Prevent horizontal scroll but allow vertical native scroll */
+        overflow-x: hidden;
+        /* Hardware acceleration for smoother rendering */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* iOS Momentum Scrolling */
+      .custom-scrollbar, .overflow-y-auto, .overflow-y-scroll, body, html {
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      /* Hide scrollbar for specific elements if needed but keep functionality */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
       }
     </style>
   <script type="importmap">
@@ -55,12 +81,13 @@
     "react/": "https://aistudiocdn.com/react@^19.2.0/",
     "react": "https://aistudiocdn.com/react@^19.2.0",
     "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0"
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "@supabase/supabase-js": "https://aistudiocdn.com/@supabase/supabase-js@^2.39.0"
   }
 }
 </script>
 </head>
-  <body class="bg-wetube-dark text-white antialiased overflow-hidden">
+  <body class="bg-wetube-dark text-white">
     <div id="root"></div>
   </body>
 </html>

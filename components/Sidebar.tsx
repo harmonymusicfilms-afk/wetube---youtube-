@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { Home, Compass, PlaySquare, Clock, ThumbsUp, Wand2, ImageIcon, Upload } from './Icons';
+import { Home, Compass, PlaySquare, Clock, ThumbsUp, Wand2, ImageIcon, Upload, FileText, Settings, LayoutDashboard, DollarSign, Smartphone, Radio, Square, Shield, BarChart2, Copyright } from './Icons';
 import { View } from '../types';
 
 interface SidebarProps {
@@ -32,25 +33,88 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, currentView, onChangeView }) 
   );
 
   return (
-    <aside className="fixed top-14 left-0 w-60 h-[calc(100vh-56px)] bg-wetube-dark overflow-y-auto z-40 pb-4 custom-scrollbar">
-      <div className="p-3">
+    <aside className="fixed top-14 left-0 w-60 h-[calc(100vh-56px)] bg-wetube-dark overflow-y-auto z-40 pb-4 custom-scrollbar flex flex-col">
+      <div className="p-3 flex-1">
         <NavItem 
           icon={Home} 
           label="Home" 
           active={currentView === View.HOME}
           onClick={() => onChangeView(View.HOME)}
         />
-        <NavItem icon={Compass} label="Shorts" />
+        <NavItem 
+          icon={Smartphone} 
+          label="Shorts" 
+          active={currentView === View.SHORTS}
+          onClick={() => onChangeView(View.SHORTS)}
+        />
         <NavItem icon={PlaySquare} label="Subscriptions" />
+        
+        <div className="my-3 border-t border-[#3F3F3F]" />
+
+        <div className="px-3 py-2 text-base font-bold">You</div>
+        <NavItem 
+            icon={Clock} 
+            label="History" 
+            active={currentView === View.HISTORY}
+            onClick={() => onChangeView(View.HISTORY)}
+        />
+        <NavItem 
+            icon={ThumbsUp} 
+            label="Liked videos" 
+            active={currentView === View.LIKED_VIDEOS}
+            onClick={() => onChangeView(View.LIKED_VIDEOS)}
+        />
         
         <div className="my-3 border-t border-[#3F3F3F]" />
         
         <div className="px-3 py-2 text-base font-bold">Creator Studio</div>
         <NavItem 
+          icon={LayoutDashboard} 
+          label="Dashboard" 
+          active={currentView === View.STUDIO_DASHBOARD}
+          onClick={() => onChangeView(View.STUDIO_DASHBOARD)}
+        />
+        <NavItem 
+          icon={Square} 
+          label="Content" 
+          active={currentView === View.STUDIO_CONTENT}
+          onClick={() => onChangeView(View.STUDIO_CONTENT)}
+        />
+        <NavItem 
+          icon={BarChart2} 
+          label="Analytics" 
+          active={currentView === View.STUDIO_ANALYTICS}
+          onClick={() => onChangeView(View.STUDIO_ANALYTICS)}
+        />
+        <NavItem 
+          icon={Copyright} 
+          label="Copyright" 
+          active={currentView === View.STUDIO_COPYRIGHT}
+          onClick={() => onChangeView(View.STUDIO_COPYRIGHT)}
+        />
+        <NavItem 
+          icon={Radio} 
+          label="Go Live" 
+          active={currentView === View.STUDIO_LIVE}
+          onClick={() => onChangeView(View.STUDIO_LIVE)}
+        />
+        <NavItem 
+          icon={DollarSign} 
+          label="Monetization" 
+          active={currentView === View.STUDIO_MONETIZATION}
+          onClick={() => onChangeView(View.STUDIO_MONETIZATION)}
+        />
+        <NavItem 
           icon={Upload} 
           label="Upload Video" 
           active={currentView === View.STUDIO_UPLOAD}
           onClick={() => onChangeView(View.STUDIO_UPLOAD)}
+        />
+        <NavItem 
+          icon={FileText} 
+          label="Script Generator" 
+          active={currentView === View.STUDIO_SCRIPT}
+          onClick={() => onChangeView(View.STUDIO_SCRIPT)}
         />
         <NavItem 
           icon={Wand2} 
@@ -67,9 +131,22 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, currentView, onChangeView }) 
 
         <div className="my-3 border-t border-[#3F3F3F]" />
 
-        <div className="px-3 py-2 text-base font-bold">You</div>
-        <NavItem icon={Clock} label="History" />
-        <NavItem icon={ThumbsUp} label="Liked videos" />
+        <div className="px-3 py-2 text-base font-bold text-gray-400 uppercase text-xs tracking-wider">Admin</div>
+        <NavItem 
+          icon={Shield} 
+          label="Admin Panel" 
+          active={currentView === View.ADMIN_DASHBOARD}
+          onClick={() => onChangeView(View.ADMIN_DASHBOARD)}
+        />
+      </div>
+
+      <div className="p-3 border-t border-[#3F3F3F]">
+        <NavItem 
+          icon={Settings} 
+          label="Settings" 
+          active={currentView === View.SETTINGS}
+          onClick={() => onChangeView(View.SETTINGS)}
+        />
       </div>
     </aside>
   );

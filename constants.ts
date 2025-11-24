@@ -1,4 +1,5 @@
-import { Video } from './types';
+
+import { Video, Short, Comment, Post } from './types';
 
 export const CATEGORIES = ['Gaming', 'Tech', 'Live', 'Cooking', 'Travel', 'Vlog', 'Education', 'Music', 'Sports'];
 
@@ -122,6 +123,112 @@ export const MOCK_VIDEOS: Video[] = [
     category: "Gaming",
     tags: ["gaming", "highlights", "esports"],
     visibility: "public"
+  }
+];
+
+export const MOCK_SHORTS: Short[] = [
+  {
+    id: 's1',
+    title: "POV: You just fixed a bug 🐛",
+    thumbnail: "https://picsum.photos/seed/short1/450/800",
+    channelName: "DevLife",
+    views: "500K",
+    likes: "25K"
+  },
+  {
+    id: 's2',
+    title: "Satisfying kinetic sand ASMR",
+    thumbnail: "https://picsum.photos/seed/short2/450/800",
+    channelName: "SatisfyMe",
+    views: "1.2M",
+    likes: "100K"
+  },
+  {
+    id: 's3',
+    title: "When the coffee hits ☕️⚡️",
+    thumbnail: "https://picsum.photos/seed/short3/450/800",
+    channelName: "MorningVibes",
+    views: "800K",
+    likes: "45K"
+  },
+  {
+    id: 's4',
+    title: "Epic trick shot! 🏀",
+    thumbnail: "https://picsum.photos/seed/short4/450/800",
+    channelName: "SportsCenter",
+    views: "2M",
+    likes: "150K"
+  },
+  {
+    id: 's5',
+    title: "Cute cat jumping fail 🐱",
+    thumbnail: "https://picsum.photos/seed/short5/450/800",
+    channelName: "MeowTube",
+    views: "3.5M",
+    likes: "300K"
+  }
+];
+
+export const MOCK_COMMENTS: Comment[] = [
+  {
+    id: 'c1',
+    author: 'Alex Dev',
+    avatar: 'https://ui-avatars.com/api/?name=Alex+Dev&background=random',
+    text: 'This tutorial is exactly what I was looking for! The AI integration part was mind-blowing. 🤯',
+    timestamp: '2 hours ago',
+    likes: 124,
+    dislikes: 2,
+    replies: [
+      {
+        id: 'c1-r1',
+        author: 'CodeMaster',
+        avatar: 'https://picsum.photos/seed/avatar1/100/100',
+        text: 'Glad you liked it Alex! Let me know if you build something cool with it.',
+        timestamp: '1 hour ago',
+        likes: 15,
+        dislikes: 0
+      }
+    ]
+  },
+  {
+    id: 'c2',
+    author: 'Sarah Jones',
+    avatar: 'https://ui-avatars.com/api/?name=Sarah+Jones&background=random',
+    text: 'Can you make a video about the backend next? Supabase is great but I struggle with RLS policies.',
+    timestamp: '5 hours ago',
+    likes: 89,
+    dislikes: 0
+  },
+  {
+    id: 'c3',
+    author: 'Techie Tom',
+    avatar: 'https://ui-avatars.com/api/?name=Techie+Tom&background=random',
+    text: 'First! 🚀',
+    timestamp: '1 day ago',
+    likes: 5,
+    dislikes: 12
+  }
+];
+
+export const MOCK_POSTS: Post[] = [
+  {
+    id: 'p1',
+    author: 'You',
+    avatar: 'https://ui-avatars.com/api/?name=You&background=ef4444&color=fff',
+    content: 'Hey everyone! New video dropping tomorrow at 10 AM EST. It is a big one! 🎥✨',
+    image: 'https://picsum.photos/seed/post1/800/400',
+    likes: 1205,
+    comments: 45,
+    timestamp: '2 hours ago'
+  },
+  {
+    id: 'p2',
+    author: 'You',
+    avatar: 'https://ui-avatars.com/api/?name=You&background=ef4444&color=fff',
+    content: 'Just hit 1.2M subscribers! Thank you all so much for the support. You are the best community ever! ❤️',
+    likes: 5400,
+    comments: 320,
+    timestamp: '3 days ago'
   }
 ];
 

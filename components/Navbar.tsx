@@ -1,16 +1,34 @@
-import React, { useState, useRef } from 'react';
-import { Menu, Search, Mic, Video, Bell } from './Icons';
+
+import React, { useState, useRef, useEffect } from 'react';
+import { Menu, Search, Mic, Video, Bell, User, Settings, LogOut, LayoutDashboard } from './Icons';
+import { View } from '../types';
 
 interface NavbarProps {
   onToggleSidebar: () => void;
   onNavigateHome: () => void;
   searchQuery: string;
   onSearchChange: (query: string) => void;
+  onChangeView: (view: View) => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, onNavigateHome, searchQuery, onSearchChange }) => {
+const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, onNavigateHome, searchQuery, onSearchChange, onChangeView }) => {
   const [isListening, setIsListening] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const recognitionRef = useRef<any>(null);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setShowUserMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleVoiceSearch = () => {
     if (isListening) {
@@ -53,6 +71,11 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, onNavigateHome, search
     };
 
     recognition.start();
+  };
+
+  const handleMenuClick = (view: View) => {
+    onChangeView(view);
+    setShowUserMenu(false);
   };
 
   return (
@@ -99,18 +122,65 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, onNavigateHome, search
       </div>
 
       <div className="flex items-center gap-2">
-        <button className="p-2 hover:bg-wetube-hover rounded-full hidden sm:block">
+        <button className="p-2 hover:bg-wetube-hover rounded-full hidden sm:block" onClick={() => handleMenuClick(View.STUDIO_UPLOAD)}>
           <Video className="w-6 h-6 text-white" />
         </button>
         <button className="p-2 hover:bg-wetube-hover rounded-full relative">
           <Bell className="w-6 h-6 text-white" />
           <span className="absolute top-1 right-1 bg-wetube-red text-xs w-4 h-4 flex items-center justify-center rounded-full">3</span>
         </button>
-        <button className="p-2 hover:bg-wetube-hover rounded-full">
-          <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-sm font-bold">
-            U
-          </div>
-        </button>
+        
+        <div className="relative" ref={userMenuRef}>
+          <button 
+            className="p-1 ml-2 hover:bg-wetube-hover rounded-full"
+            onClick={() => setShowUserMenu(!showUserMenu)}
+          >
+            <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-sm font-bold border border-transparent hover:border-gray-400">
+              Y
+            </div>
+          </button>
+
+          {showUserMenu && (
+            <div className="absolute right-0 top-full mt-2 w-64 bg-[#282828] rounded-xl shadow-2xl border border-[#3F3F3F] overflow-hidden z-50 py-2">
+              <div className="px-4 py-3 border-b border-[#3F3F3F] mb-2 flex items-center gap-3">
+                <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-base font-bold">Y</div>
+                <div>
+                  <p className="font-bold text-white">You</p>
+                  <p className="text-sm text-gray-400">@you</p>
+                </div>
+              </div>
+              
+              <button 
+                onClick={() => handleMenuClick(View.PROFILE)}
+                className="w-full text-left px-4 py-2.5 hover:bg-[#3F3F3F] flex items-center gap-3 text-gray-200"
+              >
+                <User className="w-5 h-5" /> Your Channel
+              </button>
+              
+              <button 
+                onClick={() => handleMenuClick(View.STUDIO_DASHBOARD)}
+                className="w-full text-left px-4 py-2.5 hover:bg-[#3F3F3F] flex items-center gap-3 text-gray-200"
+              >
+                <LayoutDashboard className="w-5 h-5" /> Creator Studio
+              </button>
+              
+              <button 
+                onClick={() => handleMenuClick(View.SETTINGS)}
+                className="w-full text-left px-4 py-2.5 hover:bg-[#3F3F3F] flex items-center gap-3 text-gray-200"
+              >
+                <Settings className="w-5 h-5" /> Settings
+              </button>
+              
+              <div className="my-2 border-t border-[#3F3F3F]"></div>
+              
+              <button 
+                className="w-full text-left px-4 py-2.5 hover:bg-[#3F3F3F] flex items-center gap-3 text-gray-200"
+              >
+                <LogOut className="w-5 h-5" /> Sign out
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </nav>
   );
